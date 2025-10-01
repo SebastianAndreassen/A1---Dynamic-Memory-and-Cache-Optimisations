@@ -1,17 +1,11 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <sys/time.h>
-#include <stdint.h>
-#include <errno.h>
-#include <assert.h>
 
 #include "id_query.h"
 #include "record.h"
 #include "index_core.h"
 
-const struct record *lookup_binsort_manual(const struct indexed_data *data, int64_t needle) {
-	if (!data || !data->irecord || data->n <= 0) {
+const struct record *lookup_binsort_manual(const struct indexed_data *data, const int64_t needle) {
+	if (!data || !data->idx_record || data->n <= 0) {
 		return NULL;
 	}
 
@@ -20,14 +14,14 @@ const struct record *lookup_binsort_manual(const struct indexed_data *data, int6
 
 	while (lo < hi) {
 		size_t mid = lo + (hi - lo) / 2; // avoid overflow
-		int64_t key = data->irecord[mid].osm_id;
+		int64_t key = data->idx_record[mid].osm_id;
 
 		if (key < needle) {
 			lo = mid + 1;
 		} else if (key > needle) {
 			hi = mid; // shrink to [lo, mid)
 		} else {
-			return data->irecord[mid].record; // found
+			return data->idx_record[mid].record; // found
 		}
 	}
 	return NULL; // not found

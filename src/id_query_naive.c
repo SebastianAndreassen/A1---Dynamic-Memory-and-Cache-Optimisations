@@ -1,27 +1,22 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <sys/time.h>
-#include <stdint.h>
-#include <errno.h>
 #include <assert.h>
 
 #include "record.h"
 #include "id_query.h"
 
 struct naive_data {
-  struct record *rs;
+  struct record *record;
   int n;
 };
 
 // Make naive_data struct from a record struct and an integer
-struct naive_data* mk_naive(struct record* rs, int n) {
+const struct naive_data *mk_naive(struct record* record, const int n) {
   // Allocate memory for the data structure and ensure it succeeds 
-  struct naive_data* nd = malloc(sizeof(struct naive_data));
+  struct naive_data *nd = malloc(sizeof *nd);
   assert(nd != NULL);
 
   // Assign values
-  nd->rs = rs;
+  nd->record = record;
   nd->n = n;
 
   return nd;
@@ -29,20 +24,20 @@ struct naive_data* mk_naive(struct record* rs, int n) {
 
 // Free memory allocated for the naive_data struct
 void free_naive(struct naive_data* data) {
-  free_records(data->rs, data->n);
+  free_records(data->record, data->n);
   free(data);
 }
 
 // Linear search through naive_data to find the target id
-const struct record* lookup_naive(const struct naive_data *data, int64_t needle) {
-  if (!data || !data->rs) {
+const struct record* lookup_naive(const struct naive_data *data, const int64_t needle) {
+  if (!data || !data->record) {
     return NULL;
   }
 
   // Linear search
   for (int i = 0; i < data->n; i++) {
-    if (data->rs[i].osm_id == needle) {
-      return &data->rs[i];
+    if (data->record[i].osm_id == needle) {
+      return &data->record[i];
     }
   }
   return NULL;

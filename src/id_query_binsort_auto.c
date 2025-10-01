@@ -18,7 +18,7 @@ static int cmp_needle_recordelem(const void *key, const void *elem) {
 
 
 const struct record* lookup_binsort_auto(const struct indexed_data *idxdata, const int64_t needle){
-  struct index_record *query_item = bsearch(&needle, idxdata->irecord, idxdata->n, sizeof(struct index_record), cmp_needle_recordelem);
+  struct index_record *query_item = bsearch(&needle, idxdata->idx_record, idxdata->n, sizeof(struct index_record), cmp_needle_recordelem);
   if (query_item == NULL) {
     return NULL;
   }

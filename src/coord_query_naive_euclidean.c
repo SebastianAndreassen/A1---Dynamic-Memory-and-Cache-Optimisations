@@ -1,15 +1,15 @@
 #include <stdlib.h>
-#include <assert.h>
 #include <math.h>
 #include <float.h>
 
 #include "coord_query.h"
 #include "coord_core.c"
 
-// Calculate distance between two points, very naive since we are projecting 
-// points on a sphere down onto a 2D-plane. Is 5 times faster than Haversine.
-static double euclidean(double lat1, double lon1, double lat2, double lon2) {
-  return sqrt(((lat2-lat1)*(lat2-lat1))+((lon2-lon1)*(lon2-lon1)));
+// Calculate distance between two points.
+static inline double euclidean(double lat1, double lon1, double lat2, double lon2) {
+  double dlat = lat2 - lat1;
+  double dlon = lon2 - lon1;
+  return sqrt(dlat*dlat + dlon*dlon);
 }
 
 const struct record *lookup_naive_euclidean(struct naive_data *data, double lon, double lat) {

@@ -1,6 +1,6 @@
 CC := gcc
 CFLAGS := -Wall -Wextra -pedantic -std=gnu99 -g -lm
-PROGRAMS := id_query_naive id_query_indexed id_query_binsort_auto id_query_binsort_manual coord_query_naive_euclidean coord_query_naive_haversine coord_query_kdtree 
+PROGRAMS := id_query_naive id_query_indexed id_query_binsort_auto id_query_binsort_manual coord_query_naive_euclidean coord_query_naive_haversine coord_query_kdtree random_ids
 TESTS := ..
 
 # objects used by both id_query_* programs
