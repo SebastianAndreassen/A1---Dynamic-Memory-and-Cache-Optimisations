@@ -14,35 +14,39 @@ struct naive_data {
   int n;
 };
 
-
-
+// Make naive_data struct from a record struct and an integer
 struct naive_data* mk_naive(struct record* rs, int n) {
-  struct naive_data* geo = malloc(sizeof(struct naive_data));
-  geo->rs=rs;
-  geo->n=n;
-  return geo;
-  
-  assert(1);
+  // Allocate memory for the data structure and ensure it succeeds 
+  struct naive_data* nd = malloc(sizeof(struct naive_data));
+  assert(nd != NULL);
+
+  // Assign values
+  nd->rs = rs;
+  nd->n = n;
+
+  return nd;
 }
 
+// Free memory allocated for the naive_data struct
 void free_naive(struct naive_data* data) {
+  free_records(data->rs, data->n);
   free(data);
-  assert(0);
 }
 
-const struct record* lookup_naive(struct naive_data *data, int64_t needle) {
-  
-  
-  for(int i=0;i< data->n; i++){
-    if(data->rs[i].osm_id == needle){
+// Linear search through naive_data to find the target id
+const struct record* lookup_naive(const struct naive_data *data, int64_t needle) {
+  if (!data || !data->rs) {
+    return NULL;
+  }
+
+  // Linear search
+  for (int i = 0; i < data->n; i++) {
+    if (data->rs[i].osm_id == needle) {
       return &data->rs[i];
     }
   }
-  assert(0);
+  return NULL;
 }
-
-
-
 
 int main(int argc, char** argv) {
   return id_query_loop(argc, argv,
