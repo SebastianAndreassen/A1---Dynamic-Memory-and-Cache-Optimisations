@@ -4,13 +4,13 @@
 #include <stdint.h>
 
 struct index_record {
-    int64_t osm_id;
-    const struct record *record;
+  int64_t osm_id;
+  const struct record *record;
 };
 
 struct indexed_data {
-    struct index_record *idx_record;
-    int n;
+  struct index_record *idx_record;
+	int n;
 };
 
 int cmp_index_record(const void *a, const void *b);

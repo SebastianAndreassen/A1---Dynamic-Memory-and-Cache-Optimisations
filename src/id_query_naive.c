@@ -43,8 +43,5 @@ const struct record* lookup_naive(const struct naive_data *data, const int64_t n
 }
 
 int main(int argc, char** argv) {
-  return id_query_loop(argc, argv,
-                    (mk_index_fn)mk_naive,
-                    (free_index_fn)free_naive,
-                    (lookup_fn)lookup_naive);
+  return id_query_loop(argc, argv, (mk_index_fn)mk_naive, (free_index_fn)free_naive, (lookup_fn)lookup_naive);
 }

@@ -22,18 +22,18 @@ int cmp_index_record(const void *a, const void *b) {
 }
 
 struct indexed_data *mk_indexed(struct record *record, int n) {
-    // Create an index_record
-    struct indexed_data *idata = malloc(sizeof(struct indexed_data));
-    assert(idata != NULL);
-    idata->n = n;
-    idata->idx_record = n ? malloc((size_t)n * sizeof *idata->idx_record) : NULL;
-    // Asign values
+	// Create an index_record
+	struct indexed_data *idata = malloc(sizeof(struct indexed_data));
+	assert(idata != NULL);
+	idata->n = n;
+	idata->idx_record = n ? malloc((size_t)n * sizeof *idata->idx_record) : NULL;
+	// Asign values
 
-    for (int i = 0; i < n; ++i) {
-        idata->idx_record[i].osm_id = record[i].osm_id;
-        idata->idx_record[i].record = &record[i]; // pointer to that element
-    }
-    return idata;
+	for (int i = 0; i < n; ++i) {
+		idata->idx_record[i].osm_id = record[i].osm_id;
+		idata->idx_record[i].record = &record[i]; // pointer to that element
+	}
+	return idata;
 }
 
 struct indexed_data *mk_indexed_sorted(struct record *record, int n) {

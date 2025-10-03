@@ -39,6 +39,7 @@ test: $(TESTS)
 
 clean:
 	rm -rf core *.o $(PROGRAMS)
+	rm *.txt
 
 planet-latest-geonames.tsv:
 	wget https://github.com/OSMNames/OSMNames/releases/download/v2.0.4/planet-latest_geonames.tsv.gz
@@ -47,7 +48,6 @@ planet-latest-geonames.tsv:
 ../src.zip:
 	make clean
 	cd .. && zip src.zip -r src
-
 
 # -- Compile rule -- #
 %.o: %.c

@@ -28,8 +28,5 @@ const struct record *lookup_binsort_manual(const struct indexed_data *data, cons
 }
 
 int main(int argc, char **argv) {
-	return id_query_loop(argc, argv,
-                       (mk_index_fn)mk_indexed_sorted,
-                       (free_index_fn)free_indexed,
-                       (lookup_fn)lookup_binsort_manual);
+	return id_query_loop(argc, argv, (mk_index_fn)mk_indexed_sorted, (free_index_fn)free_indexed, (lookup_fn)lookup_binsort_manual);
 }

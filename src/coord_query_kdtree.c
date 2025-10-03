@@ -13,7 +13,7 @@ struct kd_node {
 
 struct kd_tree {
 	struct kd_node *root;
-	int n; // number of nodes
+	int n; 										// number of nodes
 };
 
 /* comparators for qsort */
@@ -51,7 +51,6 @@ static struct kd_node *mk_node(struct record *record, int n, int depth) {
 	node->left  = mk_node(record, m, depth + 1);
 	// Right partition: (m, n)
 	node->right = mk_node(&record[m + 1], n - m - 1, depth + 1);
-
 	return node;
 }
 
@@ -65,22 +64,21 @@ struct kd_tree *mk_kdtree(struct record *record, int n) {
 	return tree;
 }
 
-/* -------- nearest-neighbor search (uses squared distances) -------- */
-static inline double euclidean2(double qlon, double qlat, double plon, double plat) {
+static inline double euclidean(double qlon, double qlat, double plon, double plat) {
 	double dlon = qlon - plon;
 	double dlat = qlat - plat;
-	return dlon*dlon + dlat*dlat;
+	return sqrt(dlon*dlon + dlat*dlat);
 }
 
-static void nn_search(const struct kd_node *node, double qlon, double qlat, const struct record **best, double *bestd2) {
+static void nn_search(const struct kd_node *node, double qlon, double qlat, const struct record **best, double *bestdist) {
 	if (!node) {
 		return;
 	}
 	/* visit current */
-	double d2 = euclidean2(qlon, qlat, node->record->lon, node->record->lat);
-	if (d2 < *bestd2) {
-			*bestd2 = d2;
-			*best   = node->record;
+	double dist = euclidean(qlon, qlat, node->record->lon, node->record->lat);
+	if (dist < *bestdist) {
+		*bestdist = dist;
+		*best = node->record;
 	}
 
 	/* choose near/far by which side contains the query */
@@ -91,13 +89,13 @@ static void nn_search(const struct kd_node *node, double qlon, double qlat, cons
 	const struct kd_node *far  = (qv < pv) ? node->right : node->left;
 
 	/* go down the near side first */
-	nn_search(near, qlon, qlat, best, bestd2);
+	nn_search(near, qlon, qlat, best, bestdist);
 
 	/* prune: explore far side only if hypersphere intersects the split plane */
 	double diff = qv - pv;
 	double diff2 = diff * diff;        // squared distance to splitting plane
-	if (diff2 <= *bestd2) {
-		nn_search(far, qlon, qlat, best, bestd2);
+	if (diff2 <= *bestdist) {
+		nn_search(far, qlon, qlat, best, bestdist);
 	}
 }
 
@@ -112,21 +110,22 @@ const struct record *kd_nearest(const struct kd_tree *tree, double qlon, double 
 }
 
 static void free_kd_subtree(struct kd_node *node) {
-	if (!node) return;
+	if (!node) {
+		return;
+	}
 	free_kd_subtree(node->left);
 	free_kd_subtree(node->right);
 	free(node);
 }
 
 void free_kdtree(struct kd_tree *tree) {
-	if (!tree) return;
+	if (!tree) {
+		return;
+	}
 	free_kd_subtree(tree->root);
 	free(tree);
 }
 
 int main(int argc, char** argv) {
-	return coord_query_loop(argc, argv,
-													(mk_index_fn)mk_kdtree,
-													(free_index_fn)free_kdtree,
-													(lookup_fn)kd_nearest);
+	return coord_query_loop(argc, argv, (mk_index_fn)mk_kdtree, (free_index_fn)free_kdtree, (lookup_fn)kd_nearest);
 }
