@@ -24,7 +24,6 @@ const struct naive_data *mk_naive(struct record* record, const int n) {
 
 // Free memory allocated for the naive_data struct
 void free_naive(struct naive_data* data) {
-  free_records(data->record, data->n);
   free(data);
 }
 
